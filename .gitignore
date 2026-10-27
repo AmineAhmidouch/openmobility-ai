@@ -1,0 +1,33 @@
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Secrets
+.env
+*.pem
+*.key
+
+# Local datasets and databases
+storage/raw/*
+storage/processed/*
+*.duckdb
+*.db
+
+# Model artifacts
+ml/models/*
+!ml/models/.gitkeep
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# dbt
+transformations/profiles.yml
+transformations/target/
+transformations/dbt_packages/

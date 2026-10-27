@@ -1,0 +1,53 @@
+
+version: 2
+
+models:
+  - name: stg_gtfs__routes
+    description: "Cleaned GTFS route records."
+    columns:
+      - name: route_id
+        description: "Unique identifier for each route."
+        data_tests:
+          - not_null
+          - unique
+
+  - name: stg_gtfs__stops
+    description: "Cleaned GTFS stop and station records."
+    columns:
+      - name: stop_id
+        description: "Unique identifier for each stop or station."
+        data_tests:
+          - not_null
+          - unique
+
+  - name: stg_gtfs__trips
+    description: "Cleaned GTFS trip records."
+    columns:
+      - name: trip_id
+        description: "Unique identifier for each trip."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: route_id
+        description: "Route associated with the trip."
+        data_tests:
+          - not_null
+
+  - name: stg_gtfs__stop_times
+    description: "Cleaned GTFS scheduled stop-time records."
+    columns:
+      - name: trip_id
+        description: "Trip associated with the scheduled stop event."
+        data_tests:
+          - not_null
+
+      - name: stop_id
+        description: "Stop associated with the scheduled stop event."
+        data_tests:
+          - not_null
+
+      - name: stop_sequence
+        description: "Sequence number of the stop within the trip."
+        data_tests:
+          - not_null
