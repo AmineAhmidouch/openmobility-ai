@@ -1,0 +1,74 @@
+﻿
+version: 2
+
+models:
+  - name: mart_gtfs__route_schedule_profile
+    description: >
+      Route-level summary of scheduled GTFS service.
+      Metrics describe the imported timetable snapshot,
+      not observed service or actual delays.
+
+    columns:
+      - name: route_id
+        description: Unique identifier for the route.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: scheduled_trip_count
+        description: Number of distinct scheduled trips in the feed.
+        data_tests:
+          - not_null
+
+      - name: scheduled_stop_event_count
+        description: Number of scheduled stop-time records for the route.
+        data_tests:
+          - not_null
+
+      - name: distinct_stop_count
+        description: Number of distinct stops served by the route.
+        data_tests:
+          - not_null
+
+  - name: mart_gtfs__daily_route_service
+    description: >
+      Daily scheduled trip counts by route, calculated from GTFS service
+      calendars and service-date exceptions. These are timetable counts,
+      not observed vehicle movements.
+    columns:
+      - name: service_date
+        description: Date on which the service is scheduled to operate.
+        data_tests:
+          - not_null
+
+      - name: route_id
+        description: GTFS route identifier.
+        data_tests:
+          - not_null
+
+      - name: scheduled_trip_count
+        description: Number of distinct trips scheduled on this route and date.
+        data_tests:
+          - not_null
+
+  - name: mart_gtfs__daily_service_quality
+    description: >
+      Daily GTFS service metrics and anomaly indicators for
+      monitoring schedule coverage and unusual service reductions.
+    columns:
+      - name: service_date
+        data_tests:
+          - not_null
+          - unique
+
+      - name: coverage_status
+        data_tests:
+          - not_null
+
+      - name: same_weekday_status
+        data_tests:
+          - not_null
+
+      - name: post_change_median_status
+        data_tests:
+          - not_null

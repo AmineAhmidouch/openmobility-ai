@@ -31,3 +31,15 @@ Thumbs.db
 transformations/profiles.yml
 transformations/target/
 transformations/dbt_packages/
+
+# Python packaging artifacts
+*.egg-info/
+
+# dbt local artifacts
+transformations/logs/
+transformations/target/
+transformations/dbt_packages/
+transformations/.user.yml
+
+# Local SQL debugging files
+transformations/check_intermediate.sql

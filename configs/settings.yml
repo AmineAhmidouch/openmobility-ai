@@ -1,0 +1,23 @@
+
+open_meteo:
+  base_url: "https://archive-api.open-meteo.com/v1/archive"
+
+  location:
+    name: "Paris"
+    latitude: 48.8566
+    longitude: 2.3522
+
+  date_range:
+    start_date: "2025-01-01"
+    end_date: "2025-01-07"
+
+  request:
+    timeout_seconds: 60
+    max_retries: 3
+    backoff_factor: 1.0
+
+  hourly_variables:
+    - temperature_2m
+    - precipitation
+    - relative_humidity_2m
+    - wind_speed_10m

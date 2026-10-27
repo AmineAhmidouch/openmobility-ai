@@ -1,4 +1,4 @@
-
+﻿
 version: 2
 
 models:
@@ -49,5 +49,32 @@ models:
 
       - name: stop_sequence
         description: "Sequence number of the stop within the trip."
+        data_tests:
+          - not_null
+
+  - name: stg_gtfs__calendar
+    description: "Regular GTFS service calendars."
+    columns:
+      - name: service_id
+        data_tests:
+          - not_null
+          - unique
+      - name: start_date
+        data_tests:
+          - not_null
+      - name: end_date
+        data_tests:
+          - not_null
+
+  - name: stg_gtfs__calendar_dates
+    description: "GTFS service-date additions and removals."
+    columns:
+      - name: service_id
+        data_tests:
+          - not_null
+      - name: service_date
+        data_tests:
+          - not_null
+      - name: exception_type
         data_tests:
           - not_null

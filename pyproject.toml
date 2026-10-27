@@ -1,0 +1,35 @@
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openmobility-ai"
+version = "0.1.0"
+description = "An open-source data engineering and AI platform for urban mobility"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "requests>=2.32,<3",
+    "pandas>=2.2,<3",
+    "pyarrow>=18,<25",
+    "duckdb>=1.2,<2",
+    "PyYAML>=6.0,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+    "ruff>=0.11,<1",
+]
+
+[tool.setuptools.packages.find]
+include = ["ingestion*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
