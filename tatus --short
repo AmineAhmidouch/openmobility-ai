@@ -1,0 +1,76 @@
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mindex f21448e..494a4bf 100644[m
+[1m--- a/.gitignore[m
+[1m+++ b/.gitignore[m
+[36m@@ -31,3 +31,15 @@[m [mThumbs.db[m
+ transformations/profiles.yml[m
+ transformations/target/[m
+ transformations/dbt_packages/[m
+[32m+[m
+[32m+[m[32m# Python packaging artifacts[m
+[32m+[m[32m*.egg-info/[m
+[32m+[m
+[32m+[m[32m# dbt local artifacts[m
+[32m+[m[32mtransformations/logs/[m
+[32m+[m[32mtransformations/target/[m
+[32m+[m[32mtransformations/dbt_packages/[m
+[32m+[m[32mtransformations/.user.yml[m
+[32m+[m
+[32m+[m[32m# Local SQL debugging files[m
+[32m+[m[32mtransformations/check_intermediate.sql[m
+[1mdiff --git a/transformations/build_scheduled_stop_events.py b/transformations/build_scheduled_stop_events.py[m
+[1mindex 8d931c4..8469f72 100644[m
+[1m--- a/transformations/build_scheduled_stop_events.py[m
+[1m+++ b/transformations/build_scheduled_stop_events.py[m
+[36m@@ -3,7 +3,6 @@[m [mfrom pathlib import Path[m
+ [m
+ import duckdb[m
+ [m
+[31m-[m
+ PROJECT_ROOT = Path(__file__).resolve().parents[1][m
+ DATA_DIR = PROJECT_ROOT / "storage" / "processed" / "gtfs" / "idfm"[m
+ OUTPUT_FILE = DATA_DIR / "models" / "scheduled_stop_events.parquet"[m
+[36m@@ -46,7 +45,6 @@[m [mdef build_scheduled_stop_events([m
+         routes_sql_path = routes_path.as_posix().replace("'", "''")[m
+         stops_sql_path = stops_path.as_posix().replace("'", "''")[m
+         temp_sql_path = temp_file.as_posix().replace("'", "''")[m
+[31m-        output_sql_path = output_file.as_posix().replace("'", "''")[m
+ [m
+         print("Building scheduled stop-events model...")[m
+         print("Processing approximately 12 million records.")[m
+[1mdiff --git a/transformations/models/staging/_staging__models.yml b/transformations/models/staging/_staging__models.yml[m
+[1mindex cb88253..5927f53 100644[m
+[1m--- a/transformations/models/staging/_staging__models.yml[m
+[1m+++ b/transformations/models/staging/_staging__models.yml[m
+[36m@@ -51,3 +51,31 @@[m [mmodels:[m
+         description: "Sequence number of the stop within the trip."[m
+         data_tests:[m
+           - not_null[m
+[32m+[m[41m  [m
+[32m+[m[32m  - name: stg_gtfs__calendar[m
+[32m+[m[32m    description: "Regular GTFS service calendars."[m
+[32m+[m[32m    columns:[m
+[32m+[m[32m      - name: service_id[m
+[32m+[m[32m        data_tests:[m
+[32m+[m[32m          - not_null[m
+[32m+[m[32m          - unique[m
+[32m+[m[32m      - name: start_date[m
+[32m+[m[32m        data_tests:[m
+[32m+[m[32m          - not_null[m
+[32m+[m[32m      - name: end_date[m
+[32m+[m[32m        data_tests:[m
+[32m+[m[32m          - not_null[m
+[32m+[m
+[32m+[m[32m  - name: stg_gtfs__calendar_dates[m
+[32m+[m[32m    description: "GTFS service-date additions and removals."[m
+[32m+[m[32m    columns:[m
+[32m+[m[32m      - name: service_id[m
+[32m+[m[32m        data_tests:[m
+[32m+[m[32m          - not_null[m
+[32m+[m[32m      - name: service_date[m
+[32m+[m[32m        data_tests:[m
+[32m+[m[32m          - not_null[m
+[32m+[m[32m      - name: exception_type[m
+[32m+[m[32m        data_tests:[m
+[32m+[m[32m          - not_null[m
+[41m+[m

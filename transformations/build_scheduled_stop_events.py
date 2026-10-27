@@ -1,8 +1,6 @@
-
 from pathlib import Path
 
 import duckdb
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "storage" / "processed" / "gtfs" / "idfm"
@@ -34,9 +32,7 @@ def build_scheduled_stop_events(
             raise FileNotFoundError(f"Required input file not found: {path}")
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    temp_file = output_file.with_name(
-        output_file.stem + ".tmp.parquet"
-    )
+    temp_file = output_file.with_name(output_file.stem + ".tmp.parquet")
 
     con = duckdb.connect()
 
@@ -46,7 +42,6 @@ def build_scheduled_stop_events(
         routes_sql_path = routes_path.as_posix().replace("'", "''")
         stops_sql_path = stops_path.as_posix().replace("'", "''")
         temp_sql_path = temp_file.as_posix().replace("'", "''")
-        output_sql_path = output_file.as_posix().replace("'", "''")
 
         print("Building scheduled stop-events model...")
         print("Processing approximately 12 million records.")
@@ -232,9 +227,7 @@ def build_scheduled_stop_events(
             )
 
         if invalid_timed_rows > 0:
-            raise ValueError(
-                f"Found {invalid_timed_rows:,} invalid timed rows."
-            )
+            raise ValueError(f"Found {invalid_timed_rows:,} invalid timed rows.")
 
         if invalid_coordinate_rows > 0:
             raise ValueError(
