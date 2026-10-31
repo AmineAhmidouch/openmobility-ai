@@ -1,6 +1,6 @@
 
-from pathlib import Path
 import unicodedata
+from pathlib import Path
 
 import duckdb
 import pandas as pd

@@ -1,20 +1,15 @@
 ﻿from ai.assistant import ask
 
-
 questions = [
     "Which transport mode has the worst reporting completeness?",
     "Which RATP transport mode has the worst reporting completeness?",
     "Compare reporting completeness across all transport modes for SNCF.",
     "Which RATP transport mode has the highest missing-measurement rate among urgent alerts?",
-    "Which transport modes have no urgent alerts?"
+    "Which transport modes have no urgent alerts?",
 ]
 
 for question in questions:
     print("\n" + "=" * 80)
-    print("QUESTION:", question)
+    print(f"QUESTION: {question}")
     print("-" * 80)
-
-    try:
-        print(ask(question))
-    except Exception as exc:
-        print(f"ERROR: {type(exc).__name__}: {exc}")
+    print(ask(question))
