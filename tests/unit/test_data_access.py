@@ -37,20 +37,21 @@ def test_reporting_completeness_query_filters_operator(monkeypatch):
     data_access.get_reporting_completeness_by_transport_mode("SNCF")
 
     assert captured["params"] == ["SNCF", "SNCF"]
-    assert captured["sql"].count("LOWER(TRIM(operator)) = LOWER(?)") == 2
+    assert captured["sql"].count(
+        "LOWER(TRIM(operator)) = LOWER(?)"
+    ) == 2
 
 
-@pytest.mark.parametrize("operator", ["", "   ", None, 123])
+@pytest.mark.parametrize("operator", ["", "   ", 123])
 def test_reporting_completeness_rejects_invalid_operator(operator):
-    if operator is None:
-        return
-
-    with pytest.raises(ValueError, match="operator must be a non-empty string"):
+    with pytest.raises(
+        ValueError,
+        match="operator must be a non-empty string",
+    ):
         data_access.get_reporting_completeness_by_transport_mode(operator)
 
 
 def test_reporting_completeness_allows_no_operator():
-    # No operator filter is valid: this is the all-operator comparison.
     assert callable(data_access.get_reporting_completeness_by_transport_mode)
 
 
@@ -71,34 +72,63 @@ def test_urgent_alert_query_uses_weighted_percentage(monkeypatch):
     assert "SUM(missing_both_measurements)" in captured["sql"]
     assert "SUM(source_record_count)" in captured["sql"]
 
-def test_urgent_alert_query_all_operators():
-    from ai.data_access import get_alerts_by_transport_mode
 
-    results = get_alerts_by_transport_mode()
+def test_urgent_alert_query_all_operators(monkeypatch):
+    captured = {}
 
-    assert results
-    assert all("operator" in row for row in results)
+    expected_results = [
+        {"operator": "RATP", "transport_mode": "Métro"},
+        {"operator": "SNCF", "transport_mode": "Train"},
+        {"operator": "KEOLIS", "transport_mode": "Tram"},
+    ]
+
+    def fake_query(sql, params=None):
+        captured["sql"] = sql
+        captured["params"] = params
+        return expected_results
+
+    monkeypatch.setattr(data_access, "_query", fake_query)
+
+    results = data_access.get_alerts_by_transport_mode()
+
+    assert results == expected_results
+    assert captured["params"] == []
+    assert "SELECT DISTINCT" in captured["sql"]
+    assert "GROUP BY operator, mode" in captured["sql"]
 
     operators = {row["operator"] for row in results}
 
-    assert "RATP" in operators
-    assert "SNCF" in operators
-    assert "KEOLIS" in operators
+    assert operators == {"RATP", "SNCF", "KEOLIS"}
 
 
-def test_urgent_alert_query_filters_operator():
-    from ai.data_access import get_alerts_by_transport_mode
+def test_urgent_alert_query_filters_operator(monkeypatch):
+    captured = {}
 
-    results = get_alerts_by_transport_mode("RATP")
+    expected_results = [
+        {"operator": "RATP", "transport_mode": "Métro"},
+    ]
 
-    assert results
+    def fake_query(sql, params=None):
+        captured["sql"] = sql
+        captured["params"] = params
+        return expected_results
+
+    monkeypatch.setattr(data_access, "_query", fake_query)
+
+    results = data_access.get_alerts_by_transport_mode("RATP")
+
+    assert results == expected_results
+    assert captured["params"] == ["RATP", "RATP"]
+    assert captured["sql"].count(
+        "LOWER(TRIM(operator)) = LOWER(?)"
+    ) == 2
     assert all(row["operator"] == "RATP" for row in results)
 
 
-def test_urgent_alert_query_rejects_invalid_operator():
-    import pytest
-
-    from ai.data_access import get_alerts_by_transport_mode
-
-    with pytest.raises(ValueError):
-        get_alerts_by_transport_mode("   ")
+@pytest.mark.parametrize("operator", ["", "   ", 123])
+def test_urgent_alert_query_rejects_invalid_operator(operator):
+    with pytest.raises(
+        ValueError,
+        match="operator must be a non-empty string",
+    ):
+        data_access.get_alerts_by_transport_mode(operator)
