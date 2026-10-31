@@ -7,7 +7,6 @@ models:
       Route-level summary of scheduled GTFS service.
       Metrics describe the imported timetable snapshot,
       not observed service or actual delays.
-
     columns:
       - name: route_id
         description: Unique identifier for the route.
@@ -70,5 +69,225 @@ models:
           - not_null
 
       - name: post_change_median_status
+        data_tests:
+          - not_null
+
+  - name: mart_service_quality__quarterly
+    description: >
+      Quarterly service-quality indicators aggregated by operator, DSP,
+      transport mode, theme, indicator, year, and quarter.
+      Percentage averages are unweighted averages of reported values.
+      Missing measurements are preserved and are not treated as zero.
+    columns:
+      - name: operator
+        description: Transport operator.
+        data_tests:
+          - not_null
+
+      - name: mode
+        description: Transport mode.
+        data_tests:
+          - not_null
+
+      - name: theme
+        description: Service-quality theme.
+        data_tests:
+          - not_null
+
+      - name: indicator
+        description: Service-quality indicator.
+        data_tests:
+          - not_null
+
+      - name: year
+        description: Reporting year.
+        data_tests:
+          - not_null
+
+      - name: quarter
+        description: Reporting quarter.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['T1', 'T2', 'T3', 'T4']
+
+      - name: record_count
+        description: Number of source records aggregated into this group.
+        data_tests:
+          - not_null
+
+  - name: mart_service_quality__reporting_completeness
+    description: >
+      Quarterly reporting completeness metrics by operator, DSP, transport
+      mode, theme, indicator, year, and quarter. Distinguishes missing
+      measurements from reported performance results.
+    columns:
+      - name: operator
+        description: Transport operator.
+        data_tests:
+          - not_null
+
+      - name: mode
+        description: Transport mode.
+        data_tests:
+          - not_null
+
+      - name: theme
+        description: Service-quality theme.
+        data_tests:
+          - not_null
+
+      - name: indicator
+        description: Service-quality indicator.
+        data_tests:
+          - not_null
+
+      - name: year
+        description: Reporting year.
+        data_tests:
+          - not_null
+
+      - name: quarter
+        description: Reporting quarter.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['T1', 'T2', 'T3', 'T4']
+
+      - name: source_record_count
+        description: Number of source records in the reporting group.
+        data_tests:
+          - not_null
+
+      - name: missing_both_measurements
+        description: Records missing both percentage and occurrence results.
+        data_tests:
+          - not_null
+
+      - name: missing_both_percentage
+        description: >
+          Percentage of source records missing both measurements.
+
+  - name: mart_service_quality__data_quality_alerts
+    description: >
+      Quarterly data-quality alerts for groups with missing percentage
+      and occurrence measurements. Severity is based on the percentage
+      of records missing both measurements. Groups with fewer than
+      eight source records are flagged as small samples. Severity
+      thresholds are project-defined monitoring rules.
+    columns:
+      - name: operator
+        data_tests:
+          - not_null
+
+      - name: mode
+        data_tests:
+          - not_null
+
+      - name: theme
+        data_tests:
+          - not_null
+
+      - name: indicator
+        data_tests:
+          - not_null
+
+      - name: year
+        data_tests:
+          - not_null
+
+      - name: quarter
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['T1', 'T2', 'T3', 'T4']
+
+      - name: source_record_count
+        data_tests:
+          - not_null
+
+      - name: missing_both_measurements
+        data_tests:
+          - not_null
+
+      - name: severity
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['CRITICAL', 'HIGH', 'MODERATE', 'LOW']
+
+      - name: small_sample_flag
+        data_tests:
+          - not_null
+
+      - name: recommended_action
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - INVESTIGATE_URGENTLY
+                  - INVESTIGATE
+                  - MONITOR
+                  - WATCH
+                  - LOW_SAMPLE_SIZE
+                  - NO_ACTION
+
+  - name: mart_service_quality__summary
+    description: >
+      Annual service-quality reporting summary by operator, transport
+      mode, and theme. Missingness percentages are weighted by source
+      record counts. Alert counts represent reporting-quality alerts,
+      not confirmed transport-service failures.
+    columns:
+      - name: operator
+        data_tests:
+          - not_null
+
+      - name: mode
+        data_tests:
+          - not_null
+
+      - name: theme
+        data_tests:
+          - not_null
+
+      - name: year
+        data_tests:
+          - not_null
+
+      - name: source_record_count
+        data_tests:
+          - not_null
+
+      - name: missing_both_measurements
+        data_tests:
+          - not_null
+
+      - name: missing_both_percentage
+        data_tests:
+          - not_null
+
+      - name: measurement_completeness_percentage
+        data_tests:
+          - not_null
+
+      - name: alert_group_count
+        data_tests:
+          - not_null
+
+      - name: critical_alert_group_count
+        data_tests:
+          - not_null
+
+      - name: high_alert_group_count
+        data_tests:
+          - not_null
+
+      - name: small_sample_group_count
         data_tests:
           - not_null

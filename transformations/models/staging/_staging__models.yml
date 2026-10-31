@@ -1,5 +1,4 @@
-﻿
-version: 2
+﻿version: 2
 
 models:
   - name: stg_gtfs__routes
@@ -78,3 +77,49 @@ models:
       - name: exception_type
         data_tests:
           - not_null
+
+  - name: stg_service_quality__indicators
+    description: "Cleaned quarterly public-transport service-quality indicators."
+    columns:
+      - name: operator
+        description: "Transport operator responsible for the reported indicator."
+        data_tests:
+          - not_null
+
+      - name: theme
+        description: "Service-quality theme, such as passenger information or accessibility."
+        data_tests:
+          - not_null
+
+      - name: indicator
+        description: "Name of the service-quality indicator."
+        data_tests:
+          - not_null
+
+      - name: mode
+        description: "Transport mode associated with the indicator."
+        data_tests:
+          - not_null
+
+      - name: quarter
+        description: "Reporting quarter."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['T1', 'T2', 'T3', 'T4']
+
+      - name: year
+        description: "Reporting year."
+        data_tests:
+          - not_null
+
+      - name: result_percentage
+        description: "Reported indicator result as a percentage; may be missing."
+
+      - name: result_occurrence
+        description: "Reported indicator result as an occurrence count; may be missing."
+
+      - name: penalty
+        description: "Penalty status reported by the source."
+

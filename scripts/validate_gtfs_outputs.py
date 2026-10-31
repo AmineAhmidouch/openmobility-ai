@@ -4,13 +4,19 @@
 import argparse
 import json
 import logging
+import os
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pyarrow.parquet as pq
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = ROOT / "storage" / "processed" / "gtfs" / "idfm"
+DATA_DIR = Path(
+    os.environ.get(
+        "OPENMOBILITY_PROCESSED_DIR",
+        str(ROOT / "storage" / "processed" / "gtfs" / "idfm"),
+    )
+)
 BASELINE_PATH = DATA_DIR / "gtfs_validation_baseline.json"
 
 REQUIRED_COLUMNS = {

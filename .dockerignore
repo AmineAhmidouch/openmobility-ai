@@ -1,0 +1,12 @@
+﻿.git/
+.venv/
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+storage/
+transformations/profiles.yml
+transformations/target/
+transformations/logs/
+transformations/dbt_packages/

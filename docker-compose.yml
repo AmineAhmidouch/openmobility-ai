@@ -1,0 +1,14 @@
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: openmobility-ai:local
+    working_dir: /app
+    environment:
+      OPENMOBILITY_PROCESSED_DIR: /data/gtfs/idfm
+    volumes:
+      - ./storage/processed/gtfs/idfm:/data/gtfs/idfm:ro
+      - ./storage/processed:/data/processed
+      - ./transformations/profiles.docker.yml:/app/transformations/profiles.yml:ro
+    command: ["python", "scripts/run_pipeline.py"]

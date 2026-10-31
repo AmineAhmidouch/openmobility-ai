@@ -9,7 +9,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PROCESSED_DIR = ROOT / "storage" / "processed" / "gtfs" / "idfm"
+PROCESSED_DIR = Path(
+    os.environ.get(
+        "OPENMOBILITY_PROCESSED_DIR",
+        str(ROOT / "storage" / "processed" / "gtfs" / "idfm"),
+    )
+)
 TRANSFORMATIONS_DIR = ROOT / "transformations"
 VALIDATOR_SCRIPT = ROOT / "scripts" / "validate_gtfs_outputs.py"
 INGESTION_SCRIPT = ROOT / "ingestion" / "gtfs.py"

@@ -1,0 +1,8 @@
+openmobility_duckdb:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "/data/processed/openmobility.duckdb"
+      schema: main
+      threads: 4
